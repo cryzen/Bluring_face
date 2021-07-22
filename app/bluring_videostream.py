@@ -25,7 +25,7 @@ class BlurVideoStream:
         print("[INFO] loading face detector model...")
         prototxtPath = os.path.sep.join([self.face, "deploy.prototxt"])
         weightsPath = os.path.sep.join([self.face,
-        	"res10_300x300_ssd_iter_140000.caffemodel"])
+                                        "res10_300x300_ssd_iter_140000.caffemodel"])
 
         self.net = cv2.dnn.readNet(prototxtPath, weightsPath)
 
@@ -35,7 +35,7 @@ class BlurVideoStream:
 
             (h, w) = self.frame.shape[:2]
             blob = cv2.dnn.blobFromImage(self.frame, 1.0, (300, 300),
-                (104.0, 177.0, 123.0))
+                                         (104.0, 177.0, 123.0))
             self.net.setInput(blob)
             detections = self.net.forward()
 
@@ -43,24 +43,20 @@ class BlurVideoStream:
 
                 confidence = detections[0, 0, i, 2]
 
-
                 if confidence > self.confidence:
 
                     box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                     (startX, startY, endX, endY) = box.astype("int")
 
-
                     face = self.frame[startY:endY, startX:endX]
-
 
                     if self.method == "simple":
                         face = anonymize_face_simple(face, factor=3.0)
 
                     else:
                         face = anonymize_face_pixelate(face,
-                            blocks=self.blocks)
-
+                                                       blocks=self.blocks)
 
                     self.frame[startY:endY, startX:endX] = face
-                
+
             return self.frame

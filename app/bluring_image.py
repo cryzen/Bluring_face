@@ -8,10 +8,10 @@ import cv2
 
 
 class BlurImage:
-    def __init__(self, images, face, destination, 
-                                method="simple", 
-                                blocks=0, 
-                                confidence=0.5):
+    def __init__(self, images, face, destination,
+                 method="simple",
+                 blocks=0,
+                 confidence=0.5):
         self.path = images
         self.face = face
         self.destination = destination
@@ -21,21 +21,21 @@ class BlurImage:
 
         self.load_face_detector()
         self.treatment()
-    
+
     def load_face_detector(self):
-        
+
         print("[INFO] loading face detector model...")
-        
+
         prototxtPath = os.path.sep.join([self.face, "deploy.prototxt"])
         weightsPath = os.path.sep.join([self.face,
-        	"res10_300x300_ssd_iter_140000.caffemodel"])
-        
+                                        "res10_300x300_ssd_iter_140000.caffemodel"])
+
         self.net = cv2.dnn.readNet(prototxtPath, weightsPath)
 
     def relative_path_definition(self):
-        
+
         filenames = []
-        
+
         try:
             filenames.extend((os.listdir(self.path)))
         except Exception:
@@ -44,11 +44,11 @@ class BlurImage:
         return filenames
 
     def treatment(self):
-        
+
         filenames = self.relative_path_definition()
 
         for filename in filenames:
-            
+
             if filename in self.path:
                 filename_path = self.path
             else:
@@ -61,7 +61,7 @@ class BlurImage:
             (h, w) = image.shape[:2]
 
             blob = cv2.dnn.blobFromImage(image, 1.0, (300, 300),
-                (104.0, 177.0, 123.0))
+                                         (104.0, 177.0, 123.0))
 
             print("[INFO] computing face detections...")
             self.net.setInput(blob)
@@ -79,7 +79,8 @@ class BlurImage:
                     if self.method == "simple":
                         face = anonymize_face_simple(face, factor=3.0)
                     else:
-                        face = anonymize_face_pixelate(face, blocks=self.blocks)
+                        face = anonymize_face_pixelate(
+                            face, blocks=self.blocks)
 
                     image[startY:endY, startX:endX] = face
 

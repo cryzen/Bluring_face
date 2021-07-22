@@ -8,32 +8,32 @@ import cv2
 
 
 class BlurVideo:
-    def __init__(self, video, face, destination, 
-                                    method="simple", 
-                                    blocks=0, 
-                                    confidence=0.5):
-        
+    def __init__(self, video, face, destination,
+                 method="simple",
+                 blocks=0,
+                 confidence=0.5):
+
         self.video = video
         self.face = face
         self.destination = destination
         self.method = method
         self.blocks = blocks
         self.confidence = confidence
-        
+
         self.load_face_detector()
         self.load_video()
         self.treatment()
-        
+
     def load_face_detector(self):
-        
+
         print("[INFO] loading face detector model...")
         prototxtPath = os.path.sep.join([self.face, "deploy.prototxt"])
         weightsPath = os.path.sep.join([self.face,
-			"res10_300x300_ssd_iter_140000.caffemodel"])
+                                        "res10_300x300_ssd_iter_140000.caffemodel"])
         self.net = cv2.dnn.readNet(prototxtPath, weightsPath)
 
     def load_video(self):
-        
+
         print("[INFO] load video...")
         self.cap = cv2.VideoCapture(self.video)
 
@@ -43,19 +43,19 @@ class BlurVideo:
 
         fourcc = cv2.VideoWriter_fourcc(*"MPEG")
         self.out = cv2.VideoWriter(self.destination, fourcc, 20.0, size)
-        
+
     def treatment(self):
 
         try:
-            
+
             while self.cap.isOpened():
                 ret, frame = self.cap.read()
 
                 (h, w) = frame.shape[:2]
 
-                blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300), 
-                    (104.0, 177.0, 123.0))
-            
+                blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300),
+                                             (104.0, 177.0, 123.0))
+
                 self.net.setInput(blob)
                 detections = self.net.forward()
 
@@ -73,14 +73,14 @@ class BlurVideo:
 
                         else:
                             face = anonymize_face_pixelate(face,
-                                blocks=self.blocks)
+                                                           blocks=self.blocks)
 
                         frame[startY:endY, startX:endX] = face
 
                 self.out.write(frame)
 
             self.cap.release()
-            
+
         except AttributeError:
 
             cv2.destroyAllWindows()
