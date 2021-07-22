@@ -1,0 +1,4 @@
+This is my first Python project. This project is my thesis. The project itself is an application with a graphical interface that allows you to anonymize your face in photos, videos and from the webcam. Not all code is used in full, image face detection and face blur functions.
+
+
+Это мой первый проект на Python. Этот проект является моей дипломной работой. Проект под собой представляет приложение с GUI, которая позволяет анонимизировать лица на фотографиях, видео и с вебки. Не весь код является полностью моим, определение лица на изображении и функции размытия лица, были взяты из открытых источников.

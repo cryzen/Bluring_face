@@ -1,0 +1,10 @@
+/.env.development
+/.vscode
+/bluring_image_console.py
+/bluring_video_console.py
+/blur_videostream_console.py
+/examples
+/examples_videos
+/Outputs
+/Outputs_video
+/__pycache__
